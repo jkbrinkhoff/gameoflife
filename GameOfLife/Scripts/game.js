@@ -4,13 +4,13 @@ $(function () {
     var myTimer = null;
     var numRows = 201;
     var numCols = 201;
-    var size = 4;
+    var cellSize = 4;
 
     // get/set canvas information
     var canvas = document.getElementById('gameCanvas');
     var ctx = canvas.getContext('2d');
-    canvas.width = size * numRows;
-    canvas.height = size * numCols;
+    canvas.width = cellSize * numRows;
+    canvas.height = cellSize * numCols;
 
     var currentGen = new Array(numCols);
     for (var y = 0; y < numCols; ++y) {
@@ -18,9 +18,9 @@ $(function () {
     }
 
 
-    function fill(s, x, y) {
-        ctx.fillStyle = s;
-        ctx.fillRect(x * size, y * size, size, size);
+    function fill(cellColor, x, y) {
+        ctx.fillStyle = cellColor;
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
     }
 
     function getNextGen() {
@@ -34,23 +34,16 @@ $(function () {
     }
 
     function generateNextGen() {
-        $('#curGen').text("Generation: " + generation++);
+        
         var numLiving = 0;
-        //  var gen = currentGen;
 
-        //for (i = 0; i < numCols; i++) {
-        //    for (j = 0; j < numRows; j++) {
-        //        if (gen[i][j])
-        //            fill('black', i, j);
-        //        else
-        //            fill('gray', i, j);
-        //    }
-        //}
+        // Create array for next generation
         var nextGen = new Array(numCols);
         for (var y = 0; y < numCols; ++y) {
             nextGen[y] = new Array(numRows);
         }
 
+        // Loop through current generation and find out who lives in the next generation
         for (var row = 0; row < numRows; row++) {
             for (var col = 0; col < numCols; col++) {
                 var iLive = amIAlive(row, col);
@@ -59,14 +52,27 @@ $(function () {
             }
         }
 
+        // Copy next generation to current generation
         currentGen = nextGen;
+
+        // Draw the new generation
         drawGeneration();
+
+        
+
+        // Stop the simulation if there are no living cells
         if (numLiving == 0) {
             clearInterval(myTimer);
             myTimer = null;
             $('#startButton').text('Start').button("refresh");
         }
 
+    }
+
+    function init() {
+        clearGrid();
+        drawGeneration();
+        myTimer = null;
     }
 
     function drawGeneration() {
@@ -79,6 +85,9 @@ $(function () {
                 }
             }
         }
+
+
+        $('#curGen').text("Generation: " + ++generation);
     }
 
     function amIAlive(row, column) {
@@ -157,18 +166,28 @@ $(function () {
     }
 
     function clearGrid() {
+        generation = 0;
+        clearInterval(myTimer);
         for (var row = 0; row < numRows; row++) {
             for (var col = 0; col < numCols; col++) {
                 currentGen[row][col] = false;
             }
         }
+        
+    }
+
+    function setGridSize(size) {
+        cellSize = size;
+        canvas.width = cellSize * numRows;
+        canvas.height = cellSize * numCols;
     }
 
     // Event Handlers
     $('#clearButton').click(function () {
+        generation = 0;
         clearGrid();
         drawGeneration();
-        generation = 0;
+        
     });
 
     $('#crossButton').click(function () {
@@ -182,7 +201,7 @@ $(function () {
         }
 
         drawGeneration();
-        generation = 0;
+
     });
 
     $('#lineButton').click(function () {
@@ -194,7 +213,7 @@ $(function () {
 
 
         drawGeneration();
-        generation = 0;
+        
     });
 
     $('#randomButton').click(function () {
@@ -218,22 +237,30 @@ $(function () {
             $('#startButton').text('Start').button("refresh");
         }
         else {
-            myTimer = setInterval(generateNextGen, 10);
+            myTimer = setInterval(generateNextGen, 100);
             $('#startButton').text('Pause').button("refresh");
         }
 
 
     });
-
+    $('#smallButton').click(function () {
+        setGridSize(2);
+    });
+    $('#mediumButton').click(function () {
+        setGridSize(3);
+    });
+    $('#largeButton').click(function () {
+        setGridSize(4);
+    });
     $('#gameCanvas').click(function (e) {
-
+  
         // get mouse click position
         var mx = e.offsetX;
         var my = e.offsetY;
 
         // calculate grid square numbers
-        var gx = ~~(mx / size);
-        var gy = ~~(my / size);
+        var gx = ~~(mx / cellSize);
+        var gy = ~~(my / cellSize);
 
         // make sure we're in bounds
         if (gx < 0 || gx >= numCols || gy < 0 || gy >= numRows) {
@@ -248,4 +275,6 @@ $(function () {
             fill('black', gx, gy);
         }
     });
+
+
 })();

@@ -3,17 +3,28 @@
 <head>
     <title></title>
     <link href="Content/site.css" rel="stylesheet" />
+    <link href="Content/jquery-ui.min.css" rel="stylesheet" />
     <script src="Scripts/jquery-2.1.4.min.js"></script>
+    <script src="Scripts/jquery-ui.min.js"></script>
+    
     <script src="Scripts/game.js"></script>
+
 </head>
 <body>
-    <div><canvas id="gameCanvas" /></div> 
+    
     <div>
         <button id="startButton">Start</button>
         <button id="clearButton">Clear Grid</button>
         <button id="randomButton">Random</button>
         <button id="lineButton">Line</button> 
         <button id="crossButton">Cross</button>
+    </div>
+    <div style="padding-top:10px"><canvas id="gameCanvas" /></div> 
+    
+    <div>
+        <button id="smallButton">Small</button>
+        <button id="mediumButton">Medium</button>
+        <button id="largeButton">Large</button>
     </div>
     <div id="curGen"></div>
 </body>

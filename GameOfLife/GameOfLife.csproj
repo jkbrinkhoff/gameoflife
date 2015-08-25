@@ -65,10 +65,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\jquery-ui.structure.min.css" />
+    <Content Include="Content\jquery-ui.theme.min.css" />
     <Content Include="Content\site.css" />
     <Content Include="GameOfLife.html" />
     <Content Include="Scripts\game.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
