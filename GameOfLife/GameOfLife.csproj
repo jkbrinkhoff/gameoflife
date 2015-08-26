@@ -66,8 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\jquery-ui.min.css" />
-    <Content Include="Content\jquery-ui.structure.min.css" />
-    <Content Include="Content\jquery-ui.theme.min.css" />
     <Content Include="Content\site.css" />
     <Content Include="GameOfLife.html" />
     <Content Include="Scripts\game.js" />
