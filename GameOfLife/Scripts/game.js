@@ -13,6 +13,7 @@ $(function () {
     canvas.width = cellSize * numRows;
     canvas.height = cellSize * numCols;
 
+    // Create array for current generation
     var currentGen = new Array(numCols);
     for (var y = 0; y < numCols; ++y) {
         currentGen[y] = new Array(numRows);
@@ -25,7 +26,6 @@ $(function () {
     }
 
     function generateNextGen() {
-
         var numLiving = 0;
 
         // Create array for next generation
@@ -57,14 +57,7 @@ $(function () {
         }
     }
 
-    function init() {
-        clearGrid();
-        drawGeneration();
-        generationTimer = null;
-    }
-
     function resetTimer() {
-        //generation = 0;
         if (generationTimer) {
             clearInterval(generationTimer);
             generationTimer = null;
@@ -167,13 +160,6 @@ $(function () {
                 currentGen[row][col] = false;
             }
         }
-
-    }
-
-    function setGridSize(size) {
-        cellSize = size;
-        canvas.width = cellSize * numRows;
-        canvas.height = cellSize * numCols;
     }
 
     // Event Handlers
@@ -186,11 +172,11 @@ $(function () {
     $('#crossButton').click(function () {
         clearGrid();
         for (var col = 0; col < numCols; col++) {
-            currentGen[Math.round(numCols / 2)][col] = true;
+            currentGen[~~(numCols / 2)][col] = true;
         }
 
         for (var row = 0; row < numRows; row++) {
-            currentGen[row][Math.round(numRows / 2)] = true;
+            currentGen[row][~~(numRows / 2)] = true;
         }
 
         drawGeneration();
@@ -201,7 +187,7 @@ $(function () {
         clearGrid();
 
         for (var col = 0; col < numCols; col++) {
-            currentGen[Math.round(numCols / 2)][col] = true;
+            currentGen[~~(numCols / 2)][col] = true;
         }
 
 
