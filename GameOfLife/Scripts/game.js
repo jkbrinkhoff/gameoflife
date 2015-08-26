@@ -1,10 +1,11 @@
 ﻿
 $(function () {
     var generation = 0;
-    var myTimer = null;
-    var numRows = 201;
-    var numCols = 201;
-    var cellSize = 4;
+    var generationDuration = 100;
+    var generationTimer = null;
+    var numRows = 121;
+    var numCols = 121;
+    var cellSize = 6;
 
     // get/set canvas information
     var canvas = document.getElementById('gameCanvas');
@@ -21,16 +22,6 @@ $(function () {
     function fill(cellColor, x, y) {
         ctx.fillStyle = cellColor;
         ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-    }
-
-    function getNextGen() {
-        var nextGen = currentGen;
-        for (i = 0; i < numRows; i++) {
-            for (j = 0; j < numCols; j++) {
-                nextGen[i][j] = !nextGen[i][j];
-            }
-        }
-        return nextGen;
     }
 
     function generateNextGen() {
@@ -58,21 +49,29 @@ $(function () {
         // Draw the new generation
         drawGeneration();
 
-        
-
         // Stop the simulation if there are no living cells
         if (numLiving == 0) {
-            clearInterval(myTimer);
-            myTimer = null;
+            clearInterval(generationTimer);
+            generationTimer = null;
             $('#startButton').text('Start').button("refresh");
         }
-
     }
 
     function init() {
         clearGrid();
         drawGeneration();
-        myTimer = null;
+        generationTimer = null;
+    }
+
+    function reset() {
+        setGeneration(0);
+        clearGrid();
+        drawGeneration();
+        if (generationTimer) {
+            clearInterval(generationTimer);
+            generationTimer = null;
+            $('#startButton').text('Start').button("refresh");
+        }
     }
 
     function drawGeneration() {
@@ -86,8 +85,8 @@ $(function () {
             }
         }
 
-
-        $('#curGen').text("Generation: " + ++generation);
+        setGeneration(generation++)
+        //$('#curGen').text("Generation: " + generation++);
     }
 
     function amIAlive(row, column) {
@@ -140,17 +139,17 @@ $(function () {
             return false;
         }
 
-            // Live cell with 2 neighbors lives
+        // Live cell with 2 neighbors lives
         else if (neighborCount == 2 && isAlive) {
             return true;
         }
 
-            // Live cell with 3 neighbors lives
+        // Live cell with 3 neighbors lives
         else if (neighborCount == 3 && isAlive) {
             return true;
         }
 
-            // Live cell with > 3 neighbors dies
+        // Live cell with > 3 neighbors dies
         else if (neighborCount > 3 && isAlive) {
             return false;
         }
@@ -167,13 +166,18 @@ $(function () {
 
     function clearGrid() {
         generation = 0;
-        clearInterval(myTimer);
+        clearInterval(generationTimer);
         for (var row = 0; row < numRows; row++) {
             for (var col = 0; col < numCols; col++) {
                 currentGen[row][col] = false;
             }
         }
         
+    }
+
+    function setGeneration(gen) {
+        generation = gen;
+        $('#curGen').text("Generation: " + generation);
     }
 
     function setGridSize(size) {
@@ -183,21 +187,18 @@ $(function () {
     }
 
     // Event Handlers
-    $('#clearButton').click(function () {
-        generation = 0;
-        clearGrid();
-        drawGeneration();
-        
+    $('#resetButton').click(function () {
+        reset();
     });
 
     $('#crossButton').click(function () {
         clearGrid();
         for (var col = 0; col < numCols; col++) {
-            currentGen[101][col] = true;
+            currentGen[Math.round(numCols/2)][col] = true;
         }
 
         for (var row = 0; row < numRows; row++) {
-            currentGen[row][101] = true;
+            currentGen[row][Math.round(numRows/2)] = true;
         }
 
         drawGeneration();
@@ -208,7 +209,7 @@ $(function () {
         clearGrid();
 
         for (var col = 0; col < numCols; col++) {
-            currentGen[101][col] = true;
+            currentGen[Math.round(numCols/2)][col] = true;
         }
 
 
@@ -217,41 +218,32 @@ $(function () {
     });
 
     $('#randomButton').click(function () {
+        clearGrid();
         for (var row = 0; row < numRows; row++) {
             for (var col = 0; col < numCols; col++) {
                 currentGen[row][col] = (Math.floor((Math.random() * 10) + 1) & 1);
             }
         }
         drawGeneration();
-        generation = 0;
     });
 
     $('#startButton').click(function () {
 
         generateNextGen();
 
-        if (myTimer) {
-
-            clearInterval(myTimer);
-            myTimer = null;
+        if (generationTimer) {
+            clearInterval(generationTimer);
+            generationTimer = null;
             $('#startButton').text('Start').button("refresh");
         }
         else {
-            myTimer = setInterval(generateNextGen, 100);
+            generationTimer = setInterval(generateNextGen, generationDuration);
             $('#startButton').text('Pause').button("refresh");
         }
 
 
     });
-    $('#smallButton').click(function () {
-        setGridSize(2);
-    });
-    $('#mediumButton').click(function () {
-        setGridSize(3);
-    });
-    $('#largeButton').click(function () {
-        setGridSize(4);
-    });
+
     $('#gameCanvas').click(function (e) {
   
         // get mouse click position
@@ -275,6 +267,4 @@ $(function () {
             fill('black', gx, gy);
         }
     });
-
-
 })();
