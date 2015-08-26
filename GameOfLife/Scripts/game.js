@@ -75,6 +75,7 @@ $(function () {
                 }
             }
         }
+
         $('#curGen').text("Generation: " + generation++);
     }
 
@@ -122,23 +123,22 @@ $(function () {
             if (currentGen[row - 1][column + 1]) neighborCount++;
         }
 
-
         // Live cell with < 2 neighbors dies
         if (neighborCount < 2 && isAlive) {
             return false;
         }
 
-            // Live cell with 2 neighbors lives
+        // Live cell with 2 neighbors lives
         else if (neighborCount == 2 && isAlive) {
             return true;
         }
 
-            // Live cell with 3 neighbors lives
+        // Live cell with 3 neighbors lives
         else if (neighborCount == 3 && isAlive) {
             return true;
         }
 
-            // Live cell with > 3 neighbors dies
+        // Live cell with > 3 neighbors dies
         else if (neighborCount > 3 && isAlive) {
             return false;
         }
@@ -155,6 +155,7 @@ $(function () {
 
     function clearGrid() {
         generation = 0;
+
         for (var row = 0; row < numRows; row++) {
             for (var col = 0; col < numCols; col++) {
                 currentGen[row][col] = false;
@@ -171,6 +172,7 @@ $(function () {
 
     $('#crossButton').click(function () {
         clearGrid();
+
         for (var col = 0; col < numCols; col++) {
             currentGen[~~(numCols / 2)][col] = true;
         }
@@ -190,24 +192,24 @@ $(function () {
             currentGen[~~(numCols / 2)][col] = true;
         }
 
-
         drawGeneration();
         resetTimer();
     });
 
     $('#randomButton').click(function () {
         clearGrid();
+
         for (var row = 0; row < numRows; row++) {
             for (var col = 0; col < numCols; col++) {
-                currentGen[row][col] = (Math.floor((Math.random() * 10) + 1) & 1);
+                currentGen[row][col] = (Math.floor((Math.random() * 2)) & 1);
             }
         }
+
         drawGeneration();
         resetTimer();
     });
 
     $('#startButton').click(function () {
-
         generateNextGen();
 
         if (generationTimer) {
@@ -219,12 +221,9 @@ $(function () {
             generationTimer = setInterval(generateNextGen, generationDuration);
             $('#startButton').text('Pause').button("refresh");
         }
-
-
     });
 
     $('#gameCanvas').click(function (e) {
-
         // get mouse click position
         var mx = e.offsetX;
         var my = e.offsetY;
